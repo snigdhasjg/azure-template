@@ -2,6 +2,12 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      image_name:
+        description: Name of the docker image
+        required: true
+      image_version:
+        description: Version of the docker image
 
 permissions:
   id-token: write 
@@ -28,7 +34,33 @@ jobs:
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Run az commands'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: ACR login
+        run: az acr login --name ${{ secrets.AZURE_ACR_REGISTRY_NAME }}
+
+      - id: metadata
+        name: Compute Metadata
         run: |
-            az account show
-            az group list
+          echo "current_date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+
+      - id: docker_image
+        name: Build Image
+        uses: docker/build-push-action@v5
+        with:
+          context: "."
+          no-cache: true
+          push: true
+          tags: |
+            ${{ format('{0}.azurecr.io/{1}:latest', secrets.AZURE_ACR_REGISTRY_NAME, inputs.image_name) }}
+            ${{ inputs.image_version && format('{0}.azurecr.io/{1}:{2}', secrets.AZURE_ACR_REGISTRY_NAME, inputs.image_name, inputs.image_version) }}
+          platforms: linux/amd64
+          labels: |
+            org.opencontainers.image.title=${{ inputs.image_name }}
+            org.opencontainers.image.url=${{ github.repositoryUrl }}
+            org.opencontainers.image.created=${{ steps.metadata.outputs.current_date }}
+            org.opencontainers.image.revision=${{ github.sha }}
