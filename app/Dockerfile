@@ -1,9 +1,9 @@
 # Replace with your base image, tipically "python:3.12"
 FROM python:3.12-alpine
 
-# External file needed for program to execute, will be avaliable here
+# If external file needed for program to execute, will be avaliable here. Note: its a read only directory
 VOLUME [ "/opt/app/input" ]
-# Put your output here
+# Put your output file here if any
 VOLUME [ "/opt/app/output" ]
 
 # It is recomended to use "/app" as directory to run your program from
