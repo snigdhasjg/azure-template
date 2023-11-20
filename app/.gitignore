@@ -1,0 +1,4 @@
+# Ignore anything on input output folder else but .gitignore
+input/**
+output/**
+!**/.gitkeep

@@ -28,8 +28,8 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ vars.AZURE_ACR_REGISTRY_LOGIN_SERVER }}
-          username: ${{ vars.AZURE_ACR_REGISTRY_USERNAME }}
+          registry: ${{ secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZURE_ACR_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_ACR_REGISTRY_TOKEN }}
 
       - id: metadata
@@ -41,14 +41,15 @@ jobs:
         name: Build Image
         uses: docker/build-push-action@v5
         with:
+          context: "app"
           no-cache: true
           push: true
           tags: |
-            ${{ vars.AZURE_ACR_REGISTRY_LOGIN_SERVER }}/${{ vars.AZURE_ACR_REGISTRY_USERNAME }}:latest
-            ${{ inputs.image_version && format('{0}/{1}:{2}', vars.AZURE_ACR_REGISTRY_LOGIN_SERVER, vars.AZURE_ACR_REGISTRY_USERNAME, inputs.image_version) }}
+            ${{ secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REGISTRY_USERNAME }}:latest
+            ${{ inputs.image_version && format('{0}/{1}:{2}', secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER, secrets.AZURE_ACR_REGISTRY_USERNAME, inputs.image_version) }}
           platforms: linux/amd64
           labels: |
-            org.opencontainers.image.name=${{ vars.AZURE_ACR_REGISTRY_LOGIN_SERVER }}/${{ vars.AZURE_ACR_REGISTRY_USERNAME }}
+            org.opencontainers.image.name=${{ secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REGISTRY_USERNAME }}
             org.opencontainers.image.url=${{ github.repositoryUrl }}
             org.opencontainers.image.created=${{ steps.metadata.outputs.current_date }}
             org.opencontainers.image.revision=${{ github.sha }}

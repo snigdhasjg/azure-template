@@ -1,5 +1,5 @@
 # Replace with your base image, tipically "python:3.12"
-FROM alpine:latest
+FROM python:3.12-alpine
 
 # External file needed for program to execute, will be avaliable here
 VOLUME [ "/opt/app/input" ]
@@ -13,4 +13,4 @@ WORKDIR /app
 COPY . .
 
 # Repalce with your actual command
-CMD [ "echo", "Hello", "World" ]
+CMD [ "python", "main.py"]

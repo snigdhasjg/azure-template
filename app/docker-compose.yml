@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  azure-template-app:
+    container_name: azure-template-app
+    build:
+      context: .
+    volumes:
+      - ./input:/opt/app/input:ro
+      - ./output:/opt/app/output
