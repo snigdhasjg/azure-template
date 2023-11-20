@@ -51,7 +51,6 @@ jobs:
           push: true
           tags: |
             ${{ format('{0}/{1}:latest', secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER, vars.AZURE_ACR_REGISTRY_USERNAME) }}
-            ${{ format('{0}/{1}:latest', secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER, 'titanic-app') }}
             ${{ inputs.image_version && format('{0}/{1}:{2}', secrets.AZURE_ACR_REGISTRY_LOGIN_SERVER, vars.AZURE_ACR_REGISTRY_USERNAME, inputs.image_version) }}
           platforms: linux/amd64
           labels: |
