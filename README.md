@@ -1,5 +1,7 @@
 # azure-template
 
+Used to push docker image to azure
+
 ---
 ## Refs:
 - https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure
